@@ -1,0 +1,114 @@
+{% extends "category_view.html" %}
+{% load static %}
+
+{% block title %}Services | Photographer{% endblock %}
+{% block content %}
+<!-- Top Recipe Section Begin -->
+<section class="recipe-section spad">
+    <div class="container">
+        <div class="row" id="general_div">
+        </div>
+    </div>
+</section>
+<!-- Top Recipe Section Begin End-->
+<script>
+    photographer_page_list()
+        function photographer_page_list(){
+            const venueElement = document.getElementById("general_div")
+            const xhttp = new XMLHttpRequest();
+            const method = 'GET'
+            const url ='/general/photographer/'
+            const responseType = "json"
+            xhttp.responseType = responseType
+            xhttp.open(method, url)
+            xhttp.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+            xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")                
+            xhttp.onload = function(){
+            const serverResponse = xhttp.response
+            var listedItems = serverResponse.response
+            var venue_name_final =  "";
+            var i, j = 1;
+            venueElement.innerHTML = `${listedItems.map(function(venue_id){
+                if(j==1){
+                    j=0
+                }
+                else{
+                    j=1
+                }
+                return formattedVenueList(venue_id, j)
+            }).join('')}`
+            }
+            xhttp.send()
+        }
+        function formattedVenueList(venue_id, counter){
+            var formattedVenue, formattedimage;
+            if (venue_id.vendorimage){
+                formattedimage = `<img src="${venue_id.vendorimage}" style="width:100%;height:300px;">`
+            }
+            else{
+                formattedimage = `<img src="{% static 'img/blank_image.jpg' %}" style="width:100%;height:300px;">`
+            }
+            if(counter == 0){
+                formattedVenue = `
+                <div class="col-lg-4 col-sm-6">
+                    <div class="recipe-item">
+                        <a href="/details/${venue_id.name}">${formattedimage}</a>
+                        <div class="ri-text">
+                            <div class="cat-name">${venue_id.type}</div>
+                            <a href="/details/${venue_id.name}">
+                                <h4>${venue_id.name}</h4>
+                            </a>
+                            <p>${venue_id.address}</p>
+                        </div>
+                    </div>
+                </div>`
+            }
+            else{
+                formattedVenue=`<div class="col-lg-4 col-sm-6">
+                    <div class="recipe-item">
+                        <a href="/details/${venue_id.name}/">${formattedimage}</a>
+                        <div class="ri-text">
+                            <div class="cat-name">${venue_id.type}</div>
+                            <a href="/details/${venue_id.name}/">
+                                <h4>${venue_id.name}</h4>
+                            </a>
+                            <p>${venue_id.address}</p>
+                        </div>
+                    </div>
+                </div>`
+            }
+            return formattedVenue
+        }
+        function handleCityCLick(city_id){
+            const venueElement = document.getElementById("general_div")
+            const xhttp = new XMLHttpRequest();
+            const method = 'GET'
+            const url ='/category/photographer/'+city_id+'/'
+            const responseType = "json"
+            xhttp.responseType = responseType
+            xhttp.open(method, url)
+            xhttp.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+            xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")                
+            xhttp.onload = function(){
+            const serverResponse = xhttp.response
+            var listedItems = serverResponse.response
+            
+            var venue_name_final =  "";
+            var i, j = 1;
+            venueElement.innerHTML = `${listedItems.map(function(venue_id){
+                if(j==1){
+                    j=0
+                }
+                else{
+                    j=1
+                }
+                return formattedVenueList(venue_id, j)
+            }).join('')}`
+            }
+            xhttp.send()
+            
+        }
+
+</script>
+{% include "city.html" %}
+{% endblock %}

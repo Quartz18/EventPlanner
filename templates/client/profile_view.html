@@ -1,0 +1,510 @@
+{% extends "vendor/home_view.html" %}
+{% load static %}
+<html>
+    <head>
+        <title>{% block title %}
+            Vendor | Profile
+        {% endblock %}</title>
+        {% block head %}
+    
+        <style>
+            .smallcheckbox{
+                width: 12px;
+            }
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0);  /*Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+          padding: 2rem;
+          border-radius: 1rem;
+          background: rgba(255, 255, 255, .7);
+          -webkit-backdrop-filter: blur(7px);
+          backdrop-filter: blur(7px);
+        }
+        
+        /* Modal Content */
+        .modal-content {
+          position: relative;
+          background-color: #fefefe;
+          margin: auto;
+          margin-top: 12%;
+          padding: 0;
+          border: 1px solid #888;
+          width: 35%;
+          height: 45%;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+          -webkit-animation-name: animatetop;
+          -webkit-animation-duration: 0.4s;
+          animation-name: animatetop;
+          animation-duration: 0.4s
+        }
+        
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+          from {top:-300px; opacity:0} 
+          to {top:0; opacity:1}
+        }
+        
+        @keyframes animatetop {
+          from {top:-300px; opacity:0}
+          to {top:0; opacity:1}
+        }
+        
+        /* The Close Button */
+        .close {
+          color: white;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        
+        .modal-header {
+          padding: 2px 16px;
+          background-color: #FC0254;
+          color: white;
+        }
+        
+        .modal-body {padding: 2px 16px;}
+        
+        .modal-footer {
+          padding: 2px 16px;
+          color: white;
+        }
+        </style>
+    <!-- Link Begin -->
+    
+        <!-- Load the progress-wizard.min.css -->
+        <link href="{% static 'css/progress-wizard.min.css' %}" rel="stylesheet">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Link End -->
+    <style>
+        .smallcheckbox{
+            width: 12px;
+        }
+    </style>
+  {% endblock %}
+    </head>
+    <body>
+        {% block header %}
+        <ul>
+            <li><a href="{% url 'user_main_page' %}">Home</a></li>
+            <li><a href="{% url 'client_category_page' category='home' %}">Categories</a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'client_category_page' category='venue' %}">Venue</a></li>
+                    <li><a href="{% url 'client_category_page' category='caterer' %}">Caterers</a></li>
+                    <li><a href="{% url 'client_category_page' category='decor' %}">Decor</a></li>
+                    <li><a href="{% url 'client_category_page' category='photographer' %}">Photography</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Cities</a>
+                <ul class="sub-menu" id="city_list_1">
+                </ul>
+            </li>
+            <li class="active"><a href="{% url 'profile_view' %}">{{username}}</a>
+                <ul class="sub-menu">
+                    <li><a href="{% url 'profile_view' %}">My Profile</a></li>
+                    <li><a id="logout_cursor1" onclick="logging_out_confirm()">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        {% endblock %}
+        {% block content %}
+    <div class="hero-search set-bg" data-setbg="{% static 'img/vendor_profile_2.jpg' %}">
+        <div class="container">
+            <div class="filter-table">
+                <div class="filter-search">
+                    <!-- Upload Vendor Begin -->
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="search-switch">Create Your Event</button>
+                        </div>
+                    </div>
+                    <!-- Upload Vendor End -->
+                </div>  
+            </div>
+        </div>
+        <!-- Categories Filter Section Begin -->
+        <div class="row">
+            <div class="col-12">
+                <div class="categories-filter-section spad mainStyle" id="schedule_listing">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <div class="filter-item">
+                                    <ul>
+                                        <li data-filter=".pending" onclick="meetingScheduled(0)">Pending Meeting</li>
+                                        <li data-filter=".confirm" onclick="meetingScheduled(1)">Confirm Meeting</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cf-filter" id="category-filter">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Categories Filter Section End -->
+        <!-- Top Recipe Section Begin -->
+        <div class="row">
+            <div class="col-12">
+            <section class="top-recipe spad">
+                <div class="section-title">
+                    <h5>Your Registered Services</h5>
+                </div>
+                <div class="container po-relative">
+                    <div class="plus-icon">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <div class="row" id="my_vendors">
+                    </div>
+                </div>
+            </section>
+            </div>
+        </div>
+        <!-- Top Recipe Section End -->
+    </div>
+    <!-- Upload Form model Begin -->
+	<div class="search-model">
+		<div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch" id="corner_switch">+</div>
+            <form action="{% url 'create_event' %}" class="search-model-form" id="vendor_form_id" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="user" id="user" value="{{username}}">
+                      <div class="form-group">
+                          <select class="form-control" id="theme" name="theme">
+                            <option value="Corporate Event">Corporate Event</option>
+                            <option value="Celebration">Celebration</option>
+                            <option value="Formal Party">Formal Party</option>
+                            <option value="Ceremony">Ceremony</option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="event_name" name="event_name" placeholder="Event Name">
+                      </div>
+                      <div class="form-group border rounded">
+                        <label>Requirements</label> 
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="venue_require" id="venue">
+                          <label class="form-check-label" for="venue">
+                            Venue
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="caterer_require" id="catering" >
+                          <label class="form-check-label" for="catering">
+                            Catering
+                            </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="decor_require" id="decor" >
+                          <label class="form-check-label" for="decor">
+                            Decor
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="photographer_require" id="photographer" >
+                          <label class="form-check-label" for="photographer">
+                            Photographer
+                          </label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="date_pick">Schedule: </label>
+                          <input type="date" class="form-control" id="deadline" name="deadline">
+                      </div>
+                      <div class="form-group">
+                        <label for="budget">Budget</label>
+                        <select class="form-control" id="budget" name="budget">
+                          <option value="1">30,000 - 60,000</option>
+                          <option value="2">60,000 - 90,000</option>
+                          <option value="3">90,000 - 1200,000</option>
+                          <option value="4">1200,000 - 150,000</option>
+                          <option value="5">150,000 &#62;</option>
+                        </select>
+                      </div>
+                      <input type="submit" class="btn btn-success" class="register" value="Add Event">
+			</form>
+		</div>
+	</div>
+    <!-- Upload Form Model end -->
+    <div id="schedule_model" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" class="fa fa-pencil"><i class="fa fa-remove"></i></span>
+          </div>
+          <div class="modal-body" id="schedule_model_check">
+            
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    <!-- Categories Filter Section End -->
+        <script>
+            var pending_schedule_list, confirm_schedule_list;
+            myVendorList()
+            function logging_out_confirm(){
+                var r = confirm("Are you sure you want to logout?");
+                if (r == true){
+                    window.location.replace("{% url 'logout_page' %}");
+                }
+            }
+            function myVendorList(){
+                const cityElement = document.getElementById("my_vendors")
+                const xhttp = new XMLHttpRequest();
+                const method = 'GET'
+                const url ='/u/eventlist/'
+                const responseType = "json"
+                xhttp.responseType = responseType
+                xhttp.open(method, url)
+                xhttp.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+                xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")                
+                xhttp.onload = function(){
+                console.log(xhttp.response)
+                const serverResponse = xhttp.response
+                var listedItems = serverResponse.vendor_list
+                console.log(listedItems.length)
+                var venue_name_final =  "";
+                var i, j = 1;
+                cityElement.innerHTML = `${listedItems.map(function(venue_id){
+                    if(j==1){
+                        j=0
+                    }
+                    else{
+                        j=1
+                    }
+                    return formattedVenueList(venue_id, j)
+                }).join('')}`
+                }
+            xhttp.send()
+            }
+            function formattedVenueList(venue_id, counter){
+                var formattedVenue, formattedimage;
+                if (venue_id.vendorimage){
+                    formattedimage = `<img class="set-bg" src="${venue_id.vendorimage}">`
+                }
+                else{
+                    formattedimage = `<img class="set-bg" src="{% static 'img/blank_image.jpg' %}">`
+                }
+                if(counter == 0){
+                    
+                    formattedVenue = `<div class="row">
+                    <div class="col-lg-6">
+                        <div class="top-recipe-item">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img class="set-bg" src="{% static 'img/recipe-4.jpg' %}">
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="top-recipe-text">
+                                        <a href="/u/event/${venue_id.name}/">
+                                        <div class="cat-name">${venue_id.theme}</div>
+                                            <h4>${venue_id.name}</h4>
+                                            <p>Deadline - ${venue_id.deadline}<br>Min Budget - ${venue_id.min_budget}<br>Max Budget - ${venue_id.max_budget}</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                }
+                else{
+                    formattedVenue=`<div class="col-lg-6">
+                        <div class="top-recipe-item">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    ${formattedimage}
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="top-recipe-text">
+                                        <a href="/u/event/${venue_id.name}/">
+                                        <div class="cat-name">${venue_id.category}</div>
+                                            <h4>${venue_id.name}</h4>
+                                            <p>${venue_id.address}</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+                }
+                return formattedVenue
+            }
+            function meetingScheduled(counter){
+                const cityElement = document.getElementById("category-filter")
+                const xhttp = new XMLHttpRequest();
+                const method = 'GET'
+                const url ='/u/schedulelist/'
+                const responseType = "json"
+                xhttp.responseType = responseType
+                xhttp.open(method, url)
+                xhttp.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+                xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")                
+                xhttp.onload = function(){
+                console.log(xhttp.response)
+                const serverResponse = xhttp.response
+                confirm_schedule_list = serverResponse.confirm_schedule_list;
+                pending_schedule_list = serverResponse.pending_schedule_list;
+                var venue_name_final =  "";
+                var i=-1, j = -1;
+                if(counter == 0){
+                    cityElement.innerHTML =
+                        `${pending_schedule_list.map(function(venue_id){
+                            j=j+1;
+                        return formattedScheduleList(venue_id,j)
+                    }).join('')}`
+                }
+                else{
+                    cityElement.innerHTML =
+                    `${confirm_schedule_list.map(function(venue_id){
+                        i=i+1;
+                    return formattedConfirmList(venue_id,i)
+                    }).join('')}` 
+                }
+                }
+            xhttp.send() 
+            }
+            function formattedScheduleList(venue_id, pointer){
+                var formattedVenue, formattedimage;
+                if (venue_id.vendorimage){
+                    formattedimage = `<img src="${venue_id.vendorimage}" alt="">`
+                }
+                else{
+                    formattedimage = `<div class="top-recipe-img set-bg" data-setbg="">
+                        <i class="fa fa-plus"></i>
+                    </div>`
+                }
+                formattedVenue = `
+                    <div class="cf-item mix all pending" style="cursor: pointer;" onclick="checkSchedule(${pointer})">
+                        <div class="cf-item-pic">
+                            ${formattedimage}
+                        </div>
+                        <div class="cf-item-text">
+                            <h5>${venue_id.name}</h5>
+                        </div>
+                    </div>`
+                    return formattedVenue
+            }
+            function formattedConfirmList(venue_id, pointer){
+                var formattedVenue, formattedimage;
+                if (venue_id.vendorimage){
+                    formattedimage = `<img src="${venue_id.vendorimage}" alt="">`
+                }
+                else{
+                    formattedimage = `<div class="top-recipe-img set-bg" data-setbg="">
+                        <i class="fa fa-plus"></i>
+                    </div>`
+                }
+                formattedVenue = `
+                    <div class="cf-item mix all pending" style="cursor: pointer;" onclick="cancelSchedule(${pointer})">
+                        <div class="cf-item-pic">
+                            ${formattedimage}
+                        </div>
+                        <div class="cf-item-text">
+                            <h5>${venue_id.name}</h5>
+                        </div>
+                    </div>`
+                    return formattedVenue
+            }
+    
+            function checkSchedule(pointer){
+                var modal = document.getElementById("schedule_model");
+                var modal_body = document.getElementById("schedule_model_check");
+                modal.style.display = "block"; var formattedMode="";
+                if (pending_schedule_list[pointer].mode){
+                    formattedMode = "Mode - In person";
+                }
+                else{
+                    formattedMode = "Mode - Virtually";
+                }
+                modal_body.innerHTML = `
+                Meeting is on ${pending_schedule_list[pointer].s_date} at ${pending_schedule_list[pointer].s_time} with ${pending_schedule_list[pointer].name}
+                <br>My Contact Number - ${pending_schedule_list[pointer].contact_number}
+                <br>${formattedMode}
+                <div class="card m-1"><div class="card-header">
+                    <form action="{% url 'pending_schedule' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" id="service" name ="service" value="${pending_schedule_list[pointer].name}">
+                        <input type="hidden" id="client" name ="client" value="${pending_schedule_list[pointer].client}">
+                        <div class="row">
+                        <button class="btn btn-danger col-8 offset-2" name="cancel">Cancel Meeting</button>
+                        </div>
+                    </form>
+                
+            </div></div>
+                `
+                var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            }
+        }
+            function cancelSchedule(pointer){
+                var modal = document.getElementById("schedule_model");
+                var modal_body = document.getElementById("schedule_model_check");
+                modal.style.display = "block"; var formattedMode="";
+                if (confirm_schedule_list[pointer].mode){
+                    formattedMode = "Mode - In person";
+                }
+                else{
+                    formattedMode = "Mode - Virtually";
+                }
+                modal_body.innerHTML = `
+                Meeting is on ${confirm_schedule_list[pointer].s_date} at ${confirm_schedule_list[pointer].s_time} with ${confirm_schedule_list[pointer].client}
+                <br>Contact Number - ${confirm_schedule_list[pointer].contact_number}
+                <br>${formattedMode}
+                <div class="card m-1"><div class="card-header">
+                    <form action="{% url 'canceling_schedule' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" id="service" name ="service" value="${confirm_schedule_list[pointer].name}">
+                        <input type="hidden" id="client" name ="client" value="${confirm_schedule_list[pointer].client}">
+                        <button class="btn btn-secondary col-8 offset-2" name="cancel">Cancel Meeting</button>
+                    </form>
+                
+            </div></div>
+                `
+            var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            }
+        }
+            
+        </script>
+        {% include "city.html" %}
+        {% endblock %}
+    </body>
+</html>

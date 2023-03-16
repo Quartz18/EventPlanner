@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Yoga Studio Template">
+    <meta name="keywords" content="Yoga, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}
+        Template
+    {% endblock %}</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap" rel="stylesheet">
+    <!-- Link Begin -->
+    
+        <!-- Load the progress-wizard.min.css -->
+        <link href="{% static 'css/progress-wizard.min.css' %}" rel="stylesheet">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Link End -->
+    <!-- Editing  Icon-->
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+    {% block head %}
+    {% endblock %}
+    <style>
+        .search-model-form label {
+            width: 550px;
+            font-size: 100%;
+            background: none;
+            color: #999;
+            font-weight:bold;
+            border-radius: 3px;
+            padding: 5px 5px 5px 5px;
+            margin: 5px 0;
+        }
+
+        #city_list_1{
+            cursor: pointer;
+        }
+        #logout_cursor1{
+            cursor: pointer;
+        }
+        .fr-item{
+            cursor: pointer;
+        }
+        .mainStyle{
+            font-size: 200%;
+          }
+          .textFontStyle{
+            
+            text-align: center;
+            font-weight:bold;
+          }
+        .main_cloumn{
+            border-style: solid;
+        }
+        .add_vendor_button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 18%;
+            border: 3px solid #FC0254;
+        }
+        .form_content_vendor{
+            color: white;
+            size: 50%;
+            font-size: 110%;
+            background: #262626;
+        }
+        .smallcheckbox{
+            width: 12px;
+        }
+        #schedule_section{
+            padding: 4.5rem;
+            background: #edc0bf;
+            background: linear-gradient(90deg, #edc0bf 0,#c4caef 58%);
+            font-family: 'Inter', sans-serif;
+            
+        }
+        #schedule_glassmorphism {
+            height: auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, .7);
+              -webkit-backdrop-filter: blur(7px);
+              backdrop-filter: blur(7px);
+          }
+          .schedule_form input {
+            width: 200px;
+            font-size: 120%;
+            border: 2px solid #b62d5a;
+            background: none;
+            color: #999;
+            font-weight:bold;
+            border-radius: 3px;
+            padding: 5px 5px 5px 5px;
+            margin: 5px 0;
+        }
+        
+        .schedule_form textarea {
+
+            font-size: 120%;
+            border: 2px solid #b62d5a;
+            background: none;
+            color: #999;
+            font-weight:bold;
+            border-radius: 3px;
+            padding: 5px 5px 5px 5px;
+            margin: 5px 0;
+        }
+        .schedule_form select {
+            width: 200px;
+            font-size: 120%;
+            border: 2px solid #b62d5a;
+            background: none;
+            color: #999;
+            font-weight:bold;
+            border-radius: 3px;
+            padding: 5px 5px 5px 5px;
+            margin: 5px 0;
+        }
+          .shape {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: .5rem;
+            left: .5rem;
+          }
+
+    </style>
+</head>
+
+<body>
+    
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+    <!-- Header Section Begin -->
+    <header class="header-section">
+        <div class="container">
+            <div class="nav-menu">
+                <nav class="main-menu mobile-menu">
+                    {% block header %}
+                    <ul>
+                        <li class="active"><a href="{% url 'home_page' %}">Home</a></li>
+                        <li><a href="{% url 'category_page' category='home' %}">Categories</a>
+                            <ul class="sub-menu">
+                                <li><a href="{% url 'category_page' category='venue' %}">Venue</a></li>
+                                <li><a href="{% url 'category_page' category='caterer' %}">Caterers</a></li>
+                                <li><a href="{% url 'category_page' category='decor' %}">Decor</a></li>
+                                <li><a href="{% url 'category_page' category='photographer' %}">Photography</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Cities</a>
+                            <ul class="sub-menu" id="city_list_1">
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'register_page' %}">Register</a></li>
+                    </ul>
+                    {% endblock %}
+                </nav>
+                <!-- <div class="nav-right search-switch">
+                    <i class="fa fa-search"></i>
+                </div> -->
+            </div>
+            <div id="mobile-menu-wrap"></div>
+        </div>
+    </header>
+    <!-- Header End -->
+    {% block content %}
+    Replace me
+    {% endblock %}
+    
+    <!-- Js Plugins -->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'js/mixitup.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

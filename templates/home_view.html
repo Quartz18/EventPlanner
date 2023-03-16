@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+    <head>
+        <title>{% block title %}
+            Home
+        {% endblock %}</title>
+        
+        
+    </head>
+    <style>
+        #city_list_1{
+            cursor: pointer;
+        }
+    </style>
+    <body>
+        {% block content %}
+        <!-- Top Recipe Section Begin -->
+        <section class="recipe-section spad">
+            <div class="container">
+                <div class="row" id="general_div">
+                </div>
+            </div>
+        </section>
+        <!-- Top Recipe Section Begin End-->
+        
+    </body>
+    <script>
+        
+    </script>
+    {% include "city.html" %}
+    {% include "general.html" %}
+    {% endblock %}
+</html>

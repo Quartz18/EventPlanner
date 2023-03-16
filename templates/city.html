@@ -1,0 +1,33 @@
+<script>
+    const cityElement = document.getElementById("city_list_1")
+    mainCityFunc(cityElement)
+    function mainCityFunc(cityElement){ 
+        const xhttp = new XMLHttpRequest();
+        const method = 'GET'
+        const url ='/city/'
+        const responseType = "json"
+        xhttp.responseType = responseType
+        xhttp.open(method, url)
+        xhttp.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+        xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest")                
+        xhttp.onload = function(){
+        const serverResponse = xhttp.response
+        var listedItems = serverResponse.response
+        var city_name_final="";
+        var i;
+        for(i=0; i<listedItems.length;i++){
+            city_name_final = city_name_final+formattedCityList(listedItems[i])
+        }
+        cityElement.innerHTML = city_name_final
+    }
+    xhttp.send()
+    }
+    function formattedCityList(city_id){
+        formattedCity = "<li><a id='city-"+city_id.id+
+            "' onclick='handleCityCLick("+
+            city_id.id+
+            ")'>"+city_id.name+
+            "</a></li>"
+        return formattedCity
+        }  
+</script>

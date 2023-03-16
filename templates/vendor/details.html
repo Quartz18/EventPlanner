@@ -1,0 +1,1083 @@
+{% extends "vendor/home_view.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}
+        Edit | Service
+    {% endblock %}</title>
+    {% block head %}
+    <style>
+        .smallcheckbox{
+            width: 12px;
+        }
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0);  /*Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      padding: 2rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, .7);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
+    }
+    
+    /* Modal Content */
+    .modal-content {
+      position: relative;
+      background-color: #fefefe;
+      margin: auto;
+      margin-top: 2%;
+      padding: 0;
+      border: 1px solid #888;
+      width: 35%;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+      -webkit-animation-name: animatetop;
+      -webkit-animation-duration: 0.4s;
+      animation-name: animatetop;
+      animation-duration: 0.4s
+    }
+    
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+      from {top:-300px; opacity:0} 
+      to {top:0; opacity:1}
+    }
+    
+    @keyframes animatetop {
+      from {top:-300px; opacity:0}
+      to {top:0; opacity:1}
+    }
+    
+    /* The Close Button */
+    .close {
+      color: white;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .modal-header {
+      padding: 2px 16px;
+      background-color: #FC0254;
+      color: white;
+    }
+    
+    .modal-body {padding: 2px 16px;}
+    
+    .modal-footer {
+      padding: 2px 16px;
+      color: white;
+    }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <!-- Single Recipe Section Begin -->
+    <section class="single-page-recipe spad">
+        <div class="recipe-top">
+            <div class="container-fluid">
+                {% if vendorimage %}
+                <img src="{{vendorimage}}" alt="No Edit Image" style="width:100%;height:600px;">
+                {% else %}
+                <img alt="Edit Image" style="width:100%;height:600px;">
+                {% endif %}
+                <button class="btn" id="edit_image_button"><i class="fa fa-pencil"></i> Edit</button>
+                <div class="hero-search" id="edit_image_form">
+                    <div class="container">
+                        <div class="filter-table">
+                            <form action="{% url 'edit_image_form' %}" class="filter-search" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                <div class="row p-2 border rounded">
+                                    <div class="col">
+                                <label for="vendor_image">Upload image:</label>
+                                <input type="file" id= "vendor_image" name = "vendor_image" multiple required></div>
+                                <div class="col">
+                                <button id="submit_image_button" type="submit">Add and Update</button></div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-search" id="delete_image_form">
+                    <div class="container">
+                        <div class="filter-table">
+                            <form action="{% url 'edit_image_form' %}" class="filter-search" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                <button id="submit_image_button" type="submit">Add and Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="recipe-title">
+                    <h2></h2>
+                    <ul class="tags">
+                        <li>Ceremonies</li>
+                        <li>parties</li>
+                        <li>Festival</li>
+                    </ul>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="ingredients-item">
+                                <div class="intro-item">
+                                    {% if vendorimage %}
+                                    <img src="{{vendorimage}}" alt="Edit Image">
+                                    {% else %}
+                                    <img alt="Edit Image">
+                                    {% endif %}
+                                    <h2>{{response.vendor_name}}</h2>
+                                    <button class="btn" id="edit_name_button"><i class="fa fa-pencil"></i> Edit</button>
+                                    <div class="hero-search" id="edit_name_form">
+                                        <div class="container">
+                                            <div class="filter-table">
+                                                <form action="{% url 'edit_name_form' %}" class="filter-search" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                    <input type="text" name="service_name" id="service_name" placeholder="Service name" required><br><br>
+                                                    <button style="background-color: black;" id="submit_name_button" type="submit">Update</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="recipe-time">
+                                        <ul>
+                                            <li>Open time: <span>{{vendortime.vendor_opening_time}}</span></li>
+                                            <li>Close time: <span>{{vendortime.vendor_closing_time}}</span></li>
+                                            <button class="btn" id="edit_time_button"><i class="fa fa-pencil"></i> Edit</button>
+                                            <div class="hero-search" id="edit_time_form">
+                                                <div class="container">
+                                                    <div class="filter-table">
+                                                        <form action="{% url 'edit_time_form' %}" class="filter-search" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="text" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                            <label for="opening_time">Open: </label>
+                                                            <input type="time" id= "opening_time" name = "opening_time">
+                                                            <label for="closing_time">Close: </label>
+                                                            <input type="time" id= "closing_time" name="closing_time"><br><br>
+                                                            <button id="submit_time_button" type="submit">Update</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="ingredient-list">
+                                    <div class="recipe-btn">
+                                        <a href="#packages" class="black-btn">Packages and Prices</a>
+                                        <a href="#deletion"> Service</a>
+                                    </div>
+                                    <div class="list-item">
+                                        <h5>Address and Contact Number</h5>
+                                        <div class="salad-list">
+                                            <h6>Address</h6>
+                                            {{response.vendor_address}}
+                                            <button class="btn" id="edit_address_button"><i class="fa fa-pencil"></i> Edit</button>
+                                            <div class="hero-search" id="edit_address_form">
+                                                <div class="container">
+                                                    <div class="filter-table">
+                                                        <form action="{% url 'edit_address_form' %}" class="filter-search" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                            <textarea id="vendor_address" name ="vendor_address" rows="4" cols="50" placeholder="Change address" required>{{response.vendor_address}}</textarea>
+                                                            <br><br>
+                                                            <button id="submit_address_button" type="submit">Update</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dressing-list">
+                                            <h6>Contact Number</h6>
+                                            <ul>
+                                                <li>{{response.vendor_contact_name}} - {{response.vendor_contact_number}}</li>
+                                                <!-- <li>Shobha - 9702996036</li> -->
+                                                <button class="btn" id="edit_contact_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                <div class="hero-search" id="edit_contact_form">
+                                                    <div class="container">
+                                                        <div class="filter-table">
+                                                            <form action="{% url 'edit_contact_form' %}" class="filter-search" method="POST">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                                <input type="text" name="vendor_contact_name" id="vendor_contact_name" value="{{response.vendor_contact_name}}" required><br><br>
+                                                                <input type="tel" pattern="[7-9]{1}[0-9]{6}[0-9]{3}" name="vendor_contact_number" id="vendor_contact_number" placeholder="Contact number" value="{{response.vendor_contact_number}}" required>
+                                                                <br><br>
+                                                                <button id="submit_contact_button" type="submit">Update</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nutrition-fact" id="packages">
+                                <div class="nutri-title">
+                                    <h6>Packages</h6>
+                                    <span>Party Areas | Food | Decor</span><br>
+                                    <div class="row pb-2">
+                                        <div class="col-12" id="accordion">
+                                            {% if response.type == 'VENUE' %}
+                                            <div class="card mt-2">
+                                            <div class="card-header">
+                                                <a class="btn btn-secondary" data-toggle="collapse" href="#collapseOne">
+                                                Party Area
+                                                </a>
+                                            </div>
+                                            <div id="collapseOne" class="collapse" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Area Name</th>
+                                                            <th>Seatings</th>
+                                                            <th>Max Capacity</th>
+                                                            <th>Price</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="part_area_body">
+                                                            
+                                                            {% for item in venue_part_area %}
+                                                            <tr>
+                                                            <td>{{item.area_name}}</td>
+                                                            <td>{{item.seating}}</td>
+                                                            <td>{{item.max_capacity}}</td>
+                                                            <td>{{item.price}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button class="btn" id="edit_party_button"><i class="fa fa-pencil"></i> Edit</button>
+                                            </div>
+                                            </div>
+                                            <div class="card mt-2">
+                                                <div class="card-header">
+                                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseTwo">
+                                                    Food Package
+                                                    </a>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Package Name</th>
+                                                                <th>Price</th>
+                                                                <th>Max Dishes</th>
+                                                                <th>Veg/Non-Veg</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="part_area_body">
+                                                                
+                                                                {% for item in venue_food_package %}
+                                                                <tr style="cursor: pointer;" onclick="food_package_show(this)" data-package="{{item.id}}">
+                                                                <td>{{item.package_name}}</td>
+                                                                <td>{{item.package_price}}</td>
+                                                                <td>{{item.max_capacity}}</td>
+                                                                {% if item.non_veg_food %}
+                                                                <td style="color: red;">Non-Veg</td>
+                                                                {% else %}
+                                                                <td style="color: green;">Veg</td>
+                                                                {% endif %}
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <button class="btn" id="edit_food_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                </div>
+                                            </div>
+                                            <div class="card mt-2">
+                                                <div class="card-header">
+                                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseThree">
+                                                    Decor Package
+                                                    </a>
+                                                </div>
+                                                <div id="collapseThree" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Package Name</th>
+                                                                <th>Price</th>
+                                                                <th>Max Audience</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="part_area_body">
+                                                                
+                                                                {% for item in venue_decor_package %}
+                                                                <tr style="cursor: pointer;" onclick="decor_package_show(this)" data-package="{{item.id}}">
+                                                                <td>{{item.package_name}}</td>
+                                                                <td>{{item.package_price}}</td>
+                                                                <td>{{item.max_capacity}}</td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <button class="btn" id="edit_decor_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                </div>
+                                            </div>
+                                            {% elif response.type == 'CATERER' %}
+                                            <div class="card mt-2">
+                                                <div class="card-header">
+                                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseTwo">
+                                                    Food Package
+                                                    </a>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Package Name</th>
+                                                                <th>Price</th>
+                                                                <th>Max Dishes</th>
+                                                                <th>Veg/Non-Veg</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="part_area_body">
+                                                                
+                                                                {% for item in venue_food_package %}
+                                                                <tr style="cursor: pointer;" onclick="food_package_show(this)" data-package="{{item.id}}">
+                                                                <td>{{item.package_name}}</td>
+                                                                <td>{{item.package_price}}</td>
+                                                                <td>{{item.max_capacity}}</td>
+                                                                {% if item.non_veg_food %}
+                                                                <td style="color: red;">Non-Veg</td>
+                                                                {% else %}
+                                                                <td style="color: green;">Veg</td>
+                                                                {% endif %}
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <button class="btn" id="edit_food_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                </div>
+                                            </div>
+                                            {% elif response.type == 'DECOR' %}
+                                            <div class="card mt-2">
+                                                <div class="card-header">
+                                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseThree">
+                                                    Decor Package
+                                                    </a>
+                                                </div>
+                                                <div id="collapseThree" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Package Name</th>
+                                                                <th>Price</th>
+                                                                <th>Max Audience</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="part_area_body">
+                                                                
+                                                                {% for item in venue_decor_package %}
+                                                                <tr style="cursor: pointer;" onclick="decor_package_show(this)" data-package="{{item.id}}">
+                                                                <td>{{item.package_name}}</td>
+                                                                <td>{{item.package_price}}</td>
+                                                                <td>{{item.max_capacity}}</td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <button class="btn" id="edit_decor_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="card mt-2">
+                                                <div class="card-header">
+                                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseFour">
+                                                    Photographer Package
+                                                    </a>
+                                                </div>
+                                                <div id="collapseFour" class="collapse" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Package Name</th>
+                                                                <th>Price</th>
+                                                                <th>Duration</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="part_area_body">
+                                                                
+                                                                {% for item in venue_photographer_package %}
+                                                                <tr style="cursor: pointer;" onclick="photographer_package_show(this)" data-package="{{item.id}}">
+                                                                <td>{{item.package_name}}</td>
+                                                                <td>{{item.package_price}}</td>
+                                                                <td>{{item.main_dur}}</td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <button class="btn" id="edit_photographer_button"><i class="fa fa-pencil"></i> Edit</button>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                            <div class="nutrition-fact" id="deletion">
+                                <div class="nutri-title">
+                                    <h6>Deleting of the Service</h6>
+                                    <br>
+                                    <div class="card mt-2">
+                                        <div class="card-header">
+                                            <button class="btn btn-danger col-12" onclick="service_deletion()">
+                                            Delete Button
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li>Deleting of the service will result into permenant deletion</li>
+                                    <li>Have you thought of Editing instead?</li>
+                                    <li>Make sure sensitive data of yours is saved!</li>
+                                </ul>
+                            </div>
+                            {% if response.type == 'VENUE' %}
+                                    <div class="row pt-2 mb-2">
+                                        <div class="hero-search" id="edit_party_form">
+                                            <div class="container">
+                                                <div class="filter-table">
+                                                    <form action="{% url 'edit_party_form' %}" class="filter-search" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                        <input type="text" name="area_name" id="area_name" maxlength="25" placeholder="Area name" required>
+                                                        <input type="number" name="seating" id="seating" min="0" placeholder="Seatings" required>
+                                                        <input type="number" name="max_capacity" id="max_capacity" min="0" placeholder="Max capacity" required>
+                                                        <input type="number" name="price" id="price" min="0" placeholder="Price" required>
+                                                        <br>
+                                                        <button id="submit_party_button" type="submit">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="hero-search" id="edit_food_form">
+                                            <div class="container py-1 border rounded">
+                                                <div class="filter-table">
+                                                    <form action="{% url 'edit_food_form' %}" class="filter-search" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                        <input type="text" name="package_name" id="package_name" maxlength="25" placeholder="Package name" required>
+                                                        <input type="number" name="package_price" min="0" placeholder="Per plate/-" required>
+                                                        <input type="number" name="max_capacity" min="0" placeholder="Maximum plates" required>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="non_veg_food"><h6>Non Veg food available: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="non_veg_food" id="non_veg_food" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <h6>Types of dishes: </h6><br>
+                                                        <input type="number" name="salads" min="0" placeholder="Salads">
+                                                        <input type="number" name="veg_starter" min="0" placeholder="Veg Starter">
+                                                        <input type="number" name="veg_main_course" min="0" placeholder="Veg main course">
+                                                        <input type="number" name="raita" min="0" placeholder="Raita">
+                                                        <input type="number" name="dessert" min="0" placeholder="Desserts">
+                                                        <input type="number" name="rotis_bread" min="0" placeholder="Assorted rotis or breads">
+                                                        <input type="number" name="rice_biryani" min="0" placeholder="Rice/Biryani">
+                                                        <input type="number" name="dal" min="0" placeholder="Dal">
+                                                        <input type="number" name="welcome_drinks" min="0" placeholder="Welcome Drinks">
+                                                        <input type="number" name="soup" min="0" placeholder="soup">
+                                                        <input type="number" name="non_veg_starter"  class="non_veg" min="0" placeholder="non_veg_starter">
+                                                        <input type="number" name="non_veg_main_course" class="non_veg" min="0" placeholder="non_veg_main_course">
+                                                        <br><br>
+                                                        <button id="submit_food_button" type="submit">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="hero-search" id="edit_decor_form">
+                                            <div class="container py-1 border rounded">
+                                                <div class="filter-table">
+                                                    <form action="{% url 'edit_decor_form' %}" class="filter-search" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                        <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                        <input type="text" name="package_name" id="package_name" maxlength="25" placeholder="Package name" required>
+                                                        <input type="number" name="package_price" min="0" placeholder="Price" required>
+                                                        <input type="number" name="max_capacity" min="0" placeholder="Maximum capacity" required>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="stage"><h6>Stage: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="stage" id="stage" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="lights"><h6>Lights: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="lights" id="lights" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="flowers"><h6>Flowers: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="flowers" id="flowers" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="furniture"><h6>Furniture: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="furniture" id="furniture" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="entrance"><h6>Entrance: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="entrance" id="entrance" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <div class="row"><div class="col-4">
+                                                            <label for="lounge"><h6>Lounge: </h6> </label>
+                                                        </div><div class="col-4">
+                                                            <input type="checkbox" name="lounge" id="lounge" value="True" class="smallcheckbox">
+                                                        </div></div>
+                                                        <br><br>
+                                                        <button id="submit_food_button" type="submit">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            {% elif response.type == 'CATERER' %}
+                            <div class="row mb-2">
+                                <div class="hero-search" id="edit_food_form">
+                                    <div class="container py-1 border rounded">
+                                        <div class="filter-table">
+                                            <form action="{% url 'edit_food_form' %}" class="filter-search" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                <input type="text" name="package_name" id="package_name" maxlength="25" placeholder="Package name" required>
+                                                <input type="number" name="package_price" min="0" placeholder="Per plate/-" required>
+                                                <input type="number" name="max_capacity" min="0" placeholder="Maximum plates" required>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="non_veg_food"><h6>Non Veg food available: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="non_veg_food" id="non_veg_food" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <h6>Types of dishes: </h6><br>
+                                                <input type="number" name="salads" min="0" placeholder="Salads">
+                                                <input type="number" name="veg_starter" min="0" placeholder="Veg Starter">
+                                                <input type="number" name="veg_main_course" min="0" placeholder="Veg main course">
+                                                <input type="number" name="raita" min="0" placeholder="Raita">
+                                                <input type="number" name="dessert" min="0" placeholder="Desserts">
+                                                <input type="number" name="rotis_bread" min="0" placeholder="Assorted rotis or breads">
+                                                <input type="number" name="rice_biryani" min="0" placeholder="Rice/Biryani">
+                                                <input type="number" name="dal" min="0" placeholder="Dal">
+                                                <input type="number" name="welcome_drinks" min="0" placeholder="Welcome Drinks">
+                                                <input type="number" name="soup" min="0" placeholder="soup">
+                                                <input type="number" name="non_veg_starter"  class="non_veg" min="0" placeholder="non_veg_starter">
+                                                <input type="number" name="non_veg_main_course" class="non_veg" min="0" placeholder="non_veg_main_course">
+                                                <br><br>
+                                                <button id="submit_food_button" type="submit">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif response.type == 'DECOR' %}
+                            <div class="row mb-2">
+                                <div class="hero-search" id="edit_decor_form">
+                                    <div class="container py-1 border rounded">
+                                        <div class="filter-table">
+                                            <form action="{% url 'edit_decor_form' %}" class="filter-search" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                <input type="text" name="package_name" id="package_name" maxlength="25" placeholder="Package name" required>
+                                                <input type="number" name="package_price" min="0" placeholder="Price" required>
+                                                <input type="number" name="max_capacity" min="0" placeholder="Maximum capacity" required>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="stage"><h6>Stage: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="stage" id="stage" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="lights"><h6>Lights: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="lights" id="lights" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="flowers"><h6>Flowers: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="flowers" id="flowers" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="furniture"><h6>Furniture: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="furniture" id="furniture" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="entrance"><h6>Entrance: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="entrance" id="entrance" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="lounge"><h6>Lounge: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="lounge" id="lounge" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <br><br>
+                                                <button id="submit_food_button" type="submit">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="row mb-2">
+                                <div class="hero-search" id="edit_photographer_form">
+                                    <div class="container py-1 border rounded">
+                                        <div class="filter-table">
+                                            <form action="{% url 'edit_photographer_form' %}" class="filter-search" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                <input type="text" name="package_name" id="package_name" maxlength="25" placeholder="Package name" required>
+                                                <input type="number" name="package_price" min="0" placeholder="Price" required>
+                                                <input type="number" name="main_dur" min="0" max="8" placeholder="Duration of event" required>
+                                                <div class="row"><div class="col-4">
+                                                    <label for="candid_photo"><h6>Candid Photo: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="candid_photo" id="candid_photo" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <input type="number" class="candid_photo" name="candid_photo_dur" min="0" max="8" placeholder="Duration">
+                                                <input type="number" class="candid_photo" name="candid_person" min="0" max="8" placeholder="Total photographers">
+                                                <div class="row"><div class="col-4">
+                                                    <label for="event_photo"><h6>Event Photo: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="event_photo" id="event_photo" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <input type="number" class="event_photo" name="event_photo_dur" min="0" max="8" placeholder="Duration">
+                                                <input type="number" class="event_photo" name="event_person" min="0" max="8" placeholder="Total photographers">
+                                                <div class="row"><div class="col-4">
+                                                    <label for="videography"><h6>Videography: </h6> </label>
+                                                </div><div class="col-4">
+                                                    <input type="checkbox" name="videography" id="videography" value="True" class="smallcheckbox">
+                                                </div></div>
+                                                <input type="number" class="videography" name="video_dur" min="0" max="8" placeholder="Duration">
+                                                <input type="number" class="videography" name="video_person" min="0" max="8" placeholder="Total photographers">
+                                                <br><br>
+                                                <button id="submit_photographer_button" type="submit">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="recipe-right">
+                                <div class="recipe-desc">
+                                    <h3>About</h3>
+                                    <p>{{vendorfile1}}<span id="dots">...</span><span id="more_content">
+                                        {{vendorfile2}}
+                                    </span>
+                                        <button class="btn" id="read_more_btn" onclick="readMoreFunc()">See more</button>
+                                    </p>
+                                    <!-- <p><button class="btn"><i class="fa fa-pencil"></i> Edit</button></p> -->
+                                </div>
+                                {% if response.type == 'VENUE' %}
+                                <div class="instruction-list">
+                                    <h3>Policies</h3>
+                                    <ul>
+                                        <li>
+                                            <span>01.</span>
+                                            <h5>Timings & Slots</h5>
+                                            Venue opens at {{vendortime.vendor_opening_time}} and closes at {{vendortime.vendor_closing_time}}
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    Morning 
+                                                    <br>
+                                                    {{vendortime.morning_opening_time}} - {{vendortime.morning_closing_time}}
+                                                </div>
+                                                <div class="col-3">
+                                                    Evening
+                                                    <br>
+                                                    {{vendortime.evening_opening_time}} - {{vendortime.evening_closing_time}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <span>02.</span>
+                                            <h5>Lodging</h5>
+                                            {% if vendorpolicy.venue_halls_ac %}
+                                            Venue Halls - AC and Non-AC are available.
+                                            {% else %}
+                                            Venue Halls - Only Non-AC available.
+                                            {% endif %} 
+                                            <br>
+                                            {% if vendorpolicy.venue_room_available %}
+                                            Rooms Available
+                                            Number of rooms : {{vendorpolicy.venue_room_count}}<br>
+                                            Average price of Room : {{vendorpolicy.room_avg_price}}<br>
+                                            Number of AC rooms : {{vendorpolicy.venue_room_ac}}<br>
+                                            Average price of AC room : {{vendorpolicy.room_ac_avg_price}}<br>
+                                            Number of changing rooms : {{vendorpolicy.changing_room_count}}<br>
+                                            Number of AC changing rooms : {{vendorpolicy.changing_room_count_ac}}<br>
+                                            {% else %}
+                                            No Rooms are available.
+                                            {% endif %}
+                                        </li>
+                                        <li>
+                                            <span>03.</span>
+                                            <h5>Booking</h5>
+                                            {{vendorpolicy.advance_percentage}}% at the time of booking<br>
+                                            {% if vendorpolicy.cancellation %}
+                                            Cancellation is permitted.
+                                            {% else %}
+                                            Non cancellable.
+                                            {% endif %}
+                                            <br>Taxes : {{response.vendor_taxes}}
+                                        </li>
+                                        <li>
+                                            <span>04.</span>
+                                            <h5>Parking</h5>
+                                            {% if vendorpolicy.parking_valet %}
+                                            Valet are provided by venue.<br>
+                                            {% else %}
+                                            No valet provided by venue<br>
+                                            {% endif %}
+                                            Parking space available for {{vendorpolicy.parking_space_count}} vehicles.
+                                        </li>
+                                        <li>
+                                            <span>05.</span>
+                                            <h5>Decor</h5>
+                                            Decoration starting costs at Rs {{vendorpolicy.venue_decor}}<br>
+                                            {% if vendorpolicy.outside_decor %}
+                                            Outside decorators are allowed at the venue.<br>
+                                            {% else %}
+                                            No outside decorators are allowed at the venue<br>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="notes">
+                                    <h3>Terms and Conditions</h3>
+                                    <div class="notes-item">
+                                        <span>i</span>
+                                        <p>
+                                            {% if vendorpolicy.alcohol_allowance %}
+                                            Alcohol are allowed at the venue.
+                                            {% else %}
+                                            No alcohol are provided by venue.
+                                            {% endif %}
+                                            {% if vendorpolicy.outside_alcohol %}
+                                            Outside alcohol is allowed at the venue.<br>
+                                            {% else %}
+                                            No outside alcohol allowed at the venue.<br>
+                                            {% endif %}
+                                            {% if vendorpolicy.music_allowance %}
+                                            Music System is provided by venue.
+                                            {% else %}
+                                            No music System is provided by venue.
+                                            {% endif %}
+                                            {% if vendorpolicy.late_music_allowance %}
+                                            Late hours music is allowed at the venue.<br>
+                                            {% else %}
+                                            No music is allowed at the venue after 10:30pm.<br>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="notes-item">
+                                        <span>i</span>
+                                        <p>{% if vendorpolicy.firecrackers %}
+                                            Firecrackers are allowed at the venue.<br>
+                                            {% else %}
+                                            No firecrackers are allowed at the venue.<br>
+                                            {% endif %}
+                                            {% if vendorpolicy.overnight_function %}
+                                            Overnight funnctions are permitted at venue.
+                                            {% else %}
+                                            No overnight function System is allowed at venue.
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="instruction-list">
+                                    <h3>Info</h3>
+                                    <ul>
+                                        <li>
+                                            <span>01.</span>
+                                            <h5>Timings & Slots</h5>
+                                            Venue opens at {{vendortime.vendor_opening_time}} and closes at {{vendortime.vendor_closing_time}}
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    Morning 
+                                                    <br>
+                                                    {{vendortime.morning_opening_time}} - {{vendortime.morning_closing_time}}
+                                                </div>
+                                                <div class="col-3">
+                                                    Evening
+                                                    <br>
+                                                    {{vendortime.evening_opening_time}} - {{vendortime.evening_closing_time}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <span>02.</span>
+                                            Years of Experience - {{vendorpolicy.vendor_yrs_exp}} years.<br>
+                                            Number of Events completed - {{vendorpolicy.events_completed}} <br>
+                                            USP - {{vendorpolicy.vendor_usp}}
+                                        </li>
+                                        <li>
+                                            <span>03.</span>
+                                            <h5>Booking</h5>
+                                            {{vendorpolicy.advance_percentage}}% at the time of booking<br>
+                                            {% if vendorpolicy.cancellation %}
+                                            Cancellation is permitted.
+                                            {% else %}
+                                            Non cancellable.
+                                            {% endif %}
+                                        </li>
+                                        <li>
+                                            <span>04.</span>
+                                            <h5>Travelling</h5>
+                                            {% if vendorpolicy.travel_allowance %}
+                                            Willing to Travel outside city - Yes<br>
+                                            {% else %}
+                                            Willing to Travel outside city - No<br>
+                                            {% endif %}
+                                            {% if vendorpolicy.outside_travel_price %}
+                                            Outside travel charge will be included in the package.<br>
+                                            {% else %}
+                                            Outside travel charge will be paid by the client.<br>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                <button class="btn" id="edit_policy_button"><i class="fa fa-pencil"></i> Edit</button>
+                                {% if response.type == 'VENUE' %}
+                                <div class="hero-search" id="edit_policy_form">
+                                    <div class="container">
+                                        <div class="filter-table">
+                                            <form action="{% url 'edit_policy_form' %}" class="filter-search" method="POST">
+                                                {% csrf_token %}
+                                                
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                <div class="row"><div class="col-6">
+                                                    <label for="advance_percentage"> Advance at the time of booking [in percentage]: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="advance_percentage" min="0" max="100" value="vendorpolicy.advance_percentage"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="venue_decor"> Starting price of the decor: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="venue_decor" min="0" value="vendorpolicy.venue_decor"><br>
+                                                </div></div>
+                                                <div class="row" id="parking_space_count"><div class="col-6">
+                                                    <label for="parking_space_count"> Parking space available for how many cars: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="parking_space_count" min="0"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="cancellation"> Are cancellation of the booking allowed? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="cancellation" value="True" class="smallcheckbox"><br></div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="outside_decor">Are outside decorators allowed? </label>
+                                                </div><div class="col-6">
+                                                <input type="checkbox" name="outside_decor" value="True" class="smallcheckbox"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="venue_halls_ac"> Do the Venue have AC Halls? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="venue_halls_ac" value="True" class="smallcheckbox"><br></div></div>
+                                                <div class="row" id="venue_room_available"><div class="col-6">
+                                                    <label for="venue_room_available"> Are there any available rooms? </label></div>
+                                                    <div class="col-6">
+                                                    <input type="checkbox" name="venue_room_available" value="True" class="smallcheckbox"><br>
+                                                </div></div>
+        
+                                                <div class="row room_info" id="venue_room_count"><div class="col-6">
+                                                    <label for="venue_room_count"> Number of available rooms: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="venue_room_count" min="0"><br>
+                                                </div></div>
+                                                <div class="row room_info" id="venue_room_ac"><div class="col-6">
+                                                    <label for="venue_room_ac"> Number of available AC rooms: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="venue_room_ac" min="0"><br>
+                                                </div></div>
+                                                <div class="row room_info" id="room_avg_price"><div class="col-6">
+                                                    <label for="room_avg_price"> Average price of each room: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="room_avg_price" min="0"><br>
+                                                </div></div>
+                                                <div class="row room_info" id="room_ac_avg_price"><div class="col-6">
+                                                    <label for="room_ac_avg_price"> Average price of AC room: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="room_ac_avg_price" min="0"><br>
+                                                </div></div>
+                                                <div class="row room_info" id="changing_room_count"><div class="col-6">
+                                                    <label for="changing_room_count"> Number of available changing rooms: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="changing_room_count" min="0"><br>
+                                                </div></div>
+                                                <div class="row room_info" id="changing_room_count_ac"><div class="col-6">
+                                                    <label for="changing_room_count_ac"> Number of available AC changing rooms: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="changing_room_count_ac" min="0"><br>
+                                                </div></div>
+                                                
+                                                <div class="row"><div class="col-6">
+                                                <label for="parking_valet"> Are the valet provided by the venue? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="parking_valet" value="True" class="smallcheckbox"><br></div></div>
+                                                
+                                                <div class="row"><div class="col-6">
+                                                <label for="alcohol_allowance"> Are alcohol permitted at the venue? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="alcohol_allowance" value="True" class="smallcheckbox" id="alcohol_allowance"><br></div></div>
+                                                <div class="row" id="outside_alcohol"><div class="col-6">
+                                                    <label for="outside_alcohol">Are outside alcohol allowed? </label>
+                                                    </div><div class="col-6">
+                                                    <input type="checkbox" name="outside_alcohol" value="True" class="smallcheckbox"><br>
+                                                    </div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="music_allowance"> Are outside music system allowed at the venue? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="music_allowance" value="True" class="smallcheckbox" id="music_allowance"><br></div></div>
+                                                <div class="row" id ="late_music"><div class="col-6">
+                                                <label for="late_music_allowance"> Are late night music system allowed? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="late_music_allowance" value="True" class="smallcheckbox"><br></div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="firecrackers"> Are firecrackers allowed? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="firecrackers" value="True" class="smallcheckbox"><br></div></div>
+                                                <div class="row"><div class="col-6">
+                                                <label for="overnight_function"> Are overnight function? </label></div>
+                                                <div class="col-6">
+                                                <input type="checkbox" name="overnight_function" value="True" class="smallcheckbox"><br></div></div>
+                                                <button id="submit_policy_button" type="submit">Add and Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="hero-search" id="edit_policy_form">
+                                    <div class="container">
+                                        <div class="filter-table">
+                                            <form action="{% url 'edit_policy_form' %}" class="filter-search" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="vendor_name" value="{{response.vendor_name}}">
+                                                <input type="hidden" style="display: none;" id="vendor_name" name ="category" value="{{response.type}}">
+                                                <div class="row"><div class="col-6">
+                                                    <label for="advance_percentage"> Advance at the time of booking [in percentage]: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="advance_percentage" min="0" max="100" value="vendorpolicy.advance_percentage"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="venue_decor"> Starting price of the decor: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="venue_decor" min="0" value="vendorpolicy.venue_decor"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="vendor_yrs_exp"> Years of Experience: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="vendor_yrs_exp" min="0"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="events_completed"> Number of events completed: </label></div>
+                                                    <div class="col-6">
+                                                    <input type="number" name="events_completed" min="0"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="cancellation"> Are cancellation of the booking allowed? </label></div>
+                                                    <div class="col-6">
+                                                    <input type="checkbox" name="cancellation" value="True" class="smallcheckbox"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="travel_allowance"> Willing to travel? </label></div>
+                                                    <div class="col-6">
+                                                    <input type="checkbox" name="travel_allowance" value="True" class="smallcheckbox" id="travel_allowance"><br>
+                                                </div></div>
+                                                <div class="row" id="outside_travel_price"><div class="col-6">
+                                                    <label for="outside_travel_price">Willig to pay for travelling? </label>
+                                                    </div><div class="col-6">
+                                                    <input type="checkbox" name="outside_travel_price" value="True" class="smallcheckbox"><br>
+                                                </div></div>
+                                                <div class="row"><div class="col-6">
+                                                    <label for="vendor_usp">USP: </label>
+                                                    </div><div class="col-6">
+                                                    <textarea name="vendor_usp" rows="4" cols="30"></textarea><br>    
+                                                </div></div>
+                                                <button id="submit_policy_button" type="submit">Add and Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </section>
+    <!-- Single Recipe Section End -->
+    <div id="package_model" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" class="fa fa-pencil"><i class="fa fa-remove"></i></span>
+          </div>
+          <div class="modal-body" id="package_model_check">
+            <div class="card m-1 p-2"><div class="card-header">
+                <form action="{% url 'deleteService' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" id="vendor_name" name ="vendor_name" placeholder="{{response.vendor_name}}" required><br><br>
+                    <button class="btn btn-danger" name="cancel">Delete Service</button>
+                </form>
+          </div></div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+</body>
+
+<script src="{% static 'js/package_details.js' %}"></script>
+{% include "city.html" %}
+{% endblock %}
+</html>
