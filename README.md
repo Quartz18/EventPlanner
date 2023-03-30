@@ -7,7 +7,9 @@ The vendor is able to get the notification of the meeting.
 
 ![image](https://user-images.githubusercontent.com/43948594/228927720-9485a087-329f-46ea-bd72-af2ca0627d66.png)
 ![image](https://user-images.githubusercontent.com/43948594/228927773-137ee565-bbac-42a2-8498-4bfd362ef99f.png)
-Vendor Side / Common page:
+
+**Vendor Side / Common page:**
+
 ![image](https://user-images.githubusercontent.com/43948594/228927905-802bd378-8077-4437-870d-13fe2ef4c3a4.png)
 ![image](https://user-images.githubusercontent.com/43948594/228927946-974ef0db-5e6b-4fc2-a6f4-fabae4a6e258.png)
 ![image](https://user-images.githubusercontent.com/43948594/228927975-ba0b14a6-59b5-460c-9ad4-8926b3a35f5c.png)
@@ -36,7 +38,8 @@ Vendor Side / Common page:
 ![image](https://user-images.githubusercontent.com/43948594/228928677-ac5091a7-65e8-481d-8dc1-cb4665871d03.png)
 ![image](https://user-images.githubusercontent.com/43948594/228928695-6bcd23be-a879-443e-b6c1-12bed1c7923d.png)
 
-Client Side:
+**Client Side:**
+
 ![image](https://user-images.githubusercontent.com/43948594/228928792-96b5e193-dc6f-49bc-ae2c-699720b1c43c.png)
 ![image](https://user-images.githubusercontent.com/43948594/228928953-7e6578c1-3d55-49e8-83de-53f5c7217805.png)
 ![image](https://user-images.githubusercontent.com/43948594/228928973-b37debed-0ab6-403c-a56f-b572ab18dfa8.png)
